@@ -1,7 +1,7 @@
 ﻿
 param(
-    [string]$dynaTraceId = '#{dynaTraceId}',
-    [string]$dynaTraceToken = '#{dynaTraceToken}',
+    [string]$dynaTraceId = "#{dynaTraceId}",
+    [string]$dynaTraceToken = "#{dynaTraceToken}",
     [string]$msi = "#{msiUrl}",
     [string]$server = "https://$dynaTraceId.live.dynatrace.com:443"
 )
