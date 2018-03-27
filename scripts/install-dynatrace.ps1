@@ -1,8 +1,8 @@
 ﻿
 param(
-    [string]$dynaTraceId = 'site id',
-    [string]$dynaTraceToken = 'site token',
-    [string]$msi = "url to msi file",
+    [string]$dynaTraceId = '#{dynaTraceId}',
+    [string]$dynaTraceToken = '#{dynaTraceToken}',
+    [string]$msi = "#{msiUrl}",
     [string]$server = "https://$dynaTraceId.live.dynatrace.com:443"
 )
 
@@ -31,6 +31,17 @@ if ($?){
         Remove-Item $fileName
     }
 }
+
+$output = Get-Content -Path $logFile
+
+if ($output -match 'Product: Dynatrace Updater -- Installation completed successfully.'){
+    write-output "success"
+    exit 0
+} else {
+    write-output "failed"
+    exit 1
+}
+
 
 
 
