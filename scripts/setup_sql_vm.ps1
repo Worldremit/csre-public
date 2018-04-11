@@ -4,6 +4,6 @@
     [string]$msi = "#{msiUrl}"
 )
 
-Invoke-Expression $PSScriptRoot\install-dynatrace.ps1 -dynaTraceId $dynaTraceId -dynaTraceToken $dynaTraceToken -msi $msi
+.$PSScriptRoot\install-dynatrace.ps1 -dynaTraceId $dynaTraceId -dynaTraceToken $dynaTraceToken -msi $msi
 
-Invoke-Expression $PSScriptRoot\install-failoverclustering.ps1
+.$PSScriptRoot\install-failoverclustering.ps1
