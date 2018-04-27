@@ -11,7 +11,7 @@
         "existingVirtualMachines": {
             "type": "string",
             "metadata": {
-                "description": "Array of Azure virtual machines. e.g. [\"vm1\",\"vm2\",\"vm3\"]"
+                "description": "Azure virtual machine name"
             }
         },
         "existingRecoveryServicesVault": {
@@ -27,7 +27,7 @@
                 "description": "Backup policy to be used to backup VMs. Backup POlicy defines the schedule of the backup and how long to retain backup copies. By default every vault comes with a 'DefaultPolicy' which canbe used here."
             }
         },
-        "backupVaultRGName":{
+        "backupVaultRGNamelink":{
             "type": "string",
             "metadata": {
                 "description": "Recovery services vault Resource Group name"
@@ -45,7 +45,7 @@
             "apiVersion": "2017-05-10",
                     "name": "nestedTemplateRecoveryServices",
                     "type": "Microsoft.Resources/deployments",
-                    "resourceGroup": "[parameters('backupVaultRGName')]",
+                    "resourceGroup": "[parameters('backupVaultRGNamelink')]",
                     "properties": {
                         "mode": "Incremental",
                         "template": {
