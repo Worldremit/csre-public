@@ -85,7 +85,8 @@
       }
     },
     "tags": {
-      "value": {
+      "type": "object",
+      "defaultValue": {
         "OwnerContact": "csre-team@worldremit.com",
         "Team": "CSRE",
         "Project": "CSRE-devlab - Build",
@@ -99,11 +100,10 @@
     "subnet1Name": "[toLower(concat(parameters('project'),'01-subnet-',parameters('environment'),'-wr'))]",
     "subnet2Name": "[toLower(concat(parameters('project'),'01-subnet-',parameters('environment'),'-wr'))]",
     "vmnic": "[toLower(concat(parameters('project'),'-nic1-',parameters('environment'),'-wr'))]",
-    "nsgid":"[resourceId('Microsoft.Network/networkSecurityGroups', 'Devlabs-nsg')]",
+    "nsgid": "[resourceId('Microsoft.Network/networkSecurityGroups', 'Devlabs-nsg')]",
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmname'))]",
     "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnet1Name'))]",
     "publicIPAddressName": "[toLower(concat(parameters('project'),'-pip1-',parameters('environment'),'-wr'))]",
-
   },
   "resources": [
     {
@@ -182,7 +182,7 @@
           "windowsConfiguration": {
             "provisionVmAgent": "true"
           },
-      },
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('virtualMachineSize')]"
         },
@@ -262,6 +262,6 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
       }
-    },
+    }
   ]
 }
