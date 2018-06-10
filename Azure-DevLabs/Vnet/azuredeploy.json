@@ -95,15 +95,15 @@
     }
   },
   "variables": {
-    "vmname": "[toLower(concat(parameters('project'),'-vm-',parameters('environment'),'-wr'))]",
+    "vmname": "[toLower(concat(parameters('project'),'-vm','-wr'))]",
     "vnetname": "[toLower(concat(parameters('project'),'-vnet-',parameters('environment'),'-wr'))]",
     "subnet1Name": "[toLower(concat(parameters('project'),'01-subnet-',parameters('environment'),'-wr'))]",
-    "subnet2Name": "[toLower(concat(parameters('project'),'01-subnet-',parameters('environment'),'-wr'))]",
+    "subnet2Name": "[toLower(concat(parameters('project'),'02-subnet-',parameters('environment'),'-wr'))]",
     "vmnic": "[toLower(concat(parameters('project'),'-nic1-',parameters('environment'),'-wr'))]",
     "nsgid": "[resourceId('Microsoft.Network/networkSecurityGroups', 'Devlabs-nsg')]",
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmname'))]",
-    "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnet1Name'))]",
-    "publicIPAddressName": "[toLower(concat(parameters('project'),'-pip1-',parameters('environment'),'-wr'))]",
+    "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetname'), variables('subnet1Name'))]",
+    "publicIPAddressName": "[toLower(concat(parameters('project'),'-pip1-',parameters('environment'),'-wr'))]"
   },
   "resources": [
     {
@@ -228,7 +228,8 @@
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2017-10-01",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+        "[variables('vnetName')]"
       ],
       "location": "[parameters('location')]",
       "tags": "[parameters('tags')]",
