@@ -1,0 +1,6 @@
+{
+    "itemDisplayName": "Devlab-vnet",
+    "description": "This template creates an vnet",
+    "githubUsername": "Microsoft",
+    "summary": "Deploys an vnet environment in a DevTest Lab."
+  }
