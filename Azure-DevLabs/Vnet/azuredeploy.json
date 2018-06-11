@@ -4,7 +4,7 @@
   "parameters": {
     "project": {
       "type": "string",
-      "defaultValue": "Devlabs",
+      "defaultValue": "dlbs",
       "metadata": {
         "description": "What project or service this relates to. E.g., mercury, mobile API, etc.  Limit this to 5 characters based on naming conventions.",
         "minLength": 1,
@@ -13,9 +13,9 @@
     },
     "environment": {
       "type": "string",
-      "defaultValue": "dlbs",
+      "defaultValue": "tst",
       "allowedValues": [
-        "dlbs"
+        "tst"
       ],
       "metadata": {
         "description": "Environments for deployment."
@@ -56,25 +56,11 @@
         "description": "Subnet 1 Prefix"
       }
     },
-    "subnet1Name": {
-      "type": "string",
-      "defaultValue": "Subnet1",
-      "metadata": {
-        "description": "Subnet 1 Name"
-      }
-    },
     "subnet2Prefix": {
       "type": "string",
       "defaultValue": "10.0.1.0/24",
       "metadata": {
         "description": "Subnet 2 Prefix"
-      }
-    },
-    "subnet2Name": {
-      "type": "string",
-      "defaultValue": "Subnet2",
-      "metadata": {
-        "description": "Subnet 2 Name"
       }
     },
     "location": {
@@ -201,16 +187,16 @@
             }
           },
           "dataDisks": [
-            {
-              "lun": 0,
-              "name": "[toLower(concat(parameters('project'),'-disk2-md-',parameters('environment'),'-wr'))]",
-              "createOption": "empty",
-              "caching": "None",
-              "diskSizeGB": 1024,
-              "managedDisk": {
-                "storageAccountType": "Standard_LRS"
-              }
-            }
+            // {
+            //   "lun": 0,
+            //   "name": "[toLower(concat(parameters('project'),'-disk2-md-',parameters('environment'),'-wr'))]",
+            //   "createOption": "empty",
+            //   "caching": "None",
+            //   "diskSizeGB": 1024,
+            //   "managedDisk": {
+            //     "storageAccountType": "Standard_LRS"
+            //   }
+            // }
           ]
         },
         "networkProfile": {
