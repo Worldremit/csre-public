@@ -11,6 +11,15 @@
         "maxLength": 5
       }
     },
+    "numberOfInstances": {
+      "type": "int",
+      "defaultValue": 2,
+      "minValue": 2,
+      "maxValue": 5,
+      "metadata": {
+        "description": "Number of VMs to deploy, limit 5 since this sample is using a single storage account"
+      }
+    },
     "environment": {
       "type": "string",
       "defaultValue": "tst",
@@ -49,6 +58,19 @@
         "description": "Address prefix"
       }
     },
+    "subnetsarray": {
+      "type": "array",
+      "defaultValue": [
+        {
+          "name": "sub1",
+          "addressPrefix": "10.0.1.0/24"
+        },
+        {
+          "name": "sub2",
+          "addressPrefix": "10.0.2.0/24"
+        }
+      ]
+    },
     "subnet1Prefix": {
       "type": "string",
       "defaultValue": "10.0.0.0/24",
@@ -81,15 +103,23 @@
     }
   },
   "variables": {
-    "vmname": "[toLower(concat(parameters('project'),'-vm','-wr'))]",
+    //"vmname": "[toLower(concat(parameters('project'),copyIndex(),'-vm','-wr'))]",
     "vnetname": "[toLower(concat(parameters('project'),'-vnet-',parameters('environment'),'-wr'))]",
-    "subnet1Name": "[toLower(concat(parameters('project'),'01-subnet-',parameters('environment'),'-wr'))]",
-    "subnet2Name": "[toLower(concat(parameters('project'),'02-subnet-',parameters('environment'),'-wr'))]",
-    "vmnic": "[toLower(concat(parameters('project'),'-nic1-',parameters('environment'),'-wr'))]",
-    "nsgid": "[resourceId('Microsoft.Network/networkSecurityGroups', 'Devlabs-nsg')]",
-    "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vmname'))]",
-    "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetname'), variables('subnet1Name'))]",
-    "publicIPAddressName": "[toLower(concat(parameters('project'),'-pip1-',parameters('environment'),'-wr'))]"
+    "availabilitySetName": "[toLower(concat(parameters('project'),'-avl-',parameters('environment'),'-wr'))]",
+    // "subnet1Name": "[toLower(concat(parameters('project'),'01-subnet-',parameters('environment'),'-wr'))]",
+    // "subnetName": "[toLower(concat(parameters('project'),copyIndex(),'-subnet-',parameters('environment'),'-wr'))]",
+    // "subnet2Name": "[toLower(concat(parameters('project'),'02-subnet-',parameters('environment'),'-wr'))]",
+    // "vmnic": "[toLower(concat(parameters('project'),'-nic',copyIndex(),'-',parameters('environment'),'-wr'))]",
+    "nsgid01": "[resourceId('Microsoft.Network/networkSecurityGroups', 'Devlabs01-nsg')]",
+    "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetname'))]",
+    "snetRef-01": "[concat(variables('vnetId'), '/subnets/', 'subnet1')]",
+
+    //"subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetname')), toLower(concat(parameters('project'),copyIndex(),'-subnet-',parameters('environment'),'-wr')))]",
+    "publicIPAddressName": "[toLower(concat(parameters('project'),'-pip1-',parameters('environment'),'-wr'))]",
+    "subnetName": "subnet0",
+    "subnetModName": "[substring(variables('subnetName'),0,sub(length(variables('subnetName')), 1))]",
+    "SeperatedValues": "[split(parameters('vnetAddressPrefix'),'.')]",
+    "subnets": "[parameters('subnetsarray')]"
   },
   "resources": [
     {
@@ -99,7 +129,7 @@
       "tags": "[parameters('tags')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Devlabs-nsg"
+        "Devlabs01-nsg"
       ],
       "properties": {
         "addressSpace": {
@@ -107,28 +137,30 @@
             "[parameters('vnetAddressPrefix')]"
           ]
         },
-        "subnets": [
-          {
-            "name": "[variables('subnet1Name')]",
-            "properties": {
-              "addressPrefix": "[parameters('subnet1Prefix')]",
-              "networkSecurityGroup": {
-                "id": "[variables('nsgid')]"
-              }
-            }
-          },
-          {
-            "name": "[variables('subnet2Name')]",
-            "properties": {
-              "addressPrefix": "[parameters('subnet2Prefix')]"
-            }
-          }
-        ]
+        "subnets": []
       }
     },
     {
+      "apiVersion": "2017-08-01",
+      "type": "Microsoft.Network/virtualNetworks/subnets",
+      "name": "[concat(variables('vnetname'),'/',variables('subnetModName'),copyindex(1))]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressPrefix": "[concat(variables('SeperatedValues')[0],'.',variables('SeperatedValues')[1],'.', copyIndex(1),'.0/24')]"
+      },
+      "copy": {
+        "name": "subnetCount",
+        "count": 2,
+        "mode": "Serial",
+        "batchSize": 1
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetname'))]"
+      ]
+    },
+    {
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "Devlabs-nsg",
+      "name": "Devlabs01-nsg",
       "tags": "[parameters('tags')]",
       "location": "[resourceGroup().location]",
       "apiVersion": "2018-03-01",
@@ -152,17 +184,56 @@
       }
     },
     {
-      "name": "[variables('vmname')]",
+      "name": "[toLower(concat(parameters('project'),'-nic',copyIndex(),'-',parameters('environment'),'-wr'))]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2017-10-01",
+      "dependsOn": [
+        //"[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+        "subnetCount",
+        "[variables('vnetName')]"
+      ],
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id":"[concat(variables('vnetId'), '/subnets/', variables('subnetModName'),copyindex(1))]",
+               //"id": "[variables('snetRef-01')]"
+               
+              },
+              "privateIPAllocationMethod": "Dynamic",
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[variables('nsgid01')]"
+        }
+      }
+    },
+    {
+      "name": "[toLower(concat(parameters('project'),copyIndex(),'-vm','-wr'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "tags": "[parameters('tags')]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/',variables('vmnic'))]"
+        "nicLoop",
+        "[variables('availabilitySetName')]"
       ],
       "properties": {
         "osProfile": {
-          "computerName": "[variables('vmname')]",
+          "computerName": "[toLower(concat(parameters('project'),copyIndex(),'-vm','-wr'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]",
           "windowsConfiguration": {
@@ -181,65 +252,28 @@
           },
           "osDisk": {
             "createOption": "fromImage",
-            "name": "[toLower(concat(parameters('project'),'-disk1-md-',parameters('environment'),'-wr'))]",
+            "name": "[toLower(concat(parameters('project'),'-disk', copyIndex(),'-md-',parameters('environment'),'-wr'))]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             }
           },
-          "dataDisks": [
-            // {
-            //   "lun": 0,
-            //   "name": "[toLower(concat(parameters('project'),'-disk2-md-',parameters('environment'),'-wr'))]",
-            //   "createOption": "empty",
-            //   "caching": "None",
-            //   "diskSizeGB": 1024,
-            //   "managedDisk": {
-            //     "storageAccountType": "Standard_LRS"
-            //   }
-            // }
-          ]
+          
+          "dataDisks": []
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
         },
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces/', variables('vmnic'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/',toLower(concat(parameters('project'),'-nic',copyIndex(),'-',parameters('environment'),'-wr')))]"
             }
           ]
         }
       },
       "resources": []
     },
-    {
-      "name": "[variables('vmnic')]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2017-10-01",
-      "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-        "[variables('vnetName')]"
-      ],
-      "location": "[parameters('location')]",
-      "tags": "[parameters('tags')]",
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "subnet": {
-                "id": "[variables('subnetRef')]"
-              },
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "10.0.0.11",
-              "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
-              }
-            }
-          }
-        ],
-        "networkSecurityGroup": {
-          "id": "[variables('nsgid')]"
-        }
-      }
-    },
+    
     {
       "apiVersion": "2017-10-01",
       "type": "Microsoft.Network/publicIPAddresses",
@@ -248,6 +282,21 @@
       "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
+      }
+    },
+    {
+      "name": "[variables('availabilitySetName')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "tags": "[parameters('tags')]",
+      "apiVersion": "2017-12-01",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "platformFaultDomainCount": "2",
+        "platformUpdateDomainCount": "2"
+      },
+      "sku": {
+        "name": "Aligned"
       }
     }
   ]
