@@ -58,33 +58,6 @@
         "description": "Address prefix"
       }
     },
-    "subnetsarray": {
-      "type": "array",
-      "defaultValue": [
-        {
-          "name": "sub1",
-          "addressPrefix": "10.0.1.0/24"
-        },
-        {
-          "name": "sub2",
-          "addressPrefix": "10.0.2.0/24"
-        }
-      ]
-    },
-    "subnet1Prefix": {
-      "type": "string",
-      "defaultValue": "10.0.0.0/24",
-      "metadata": {
-        "description": "Subnet 1 Prefix"
-      }
-    },
-    "subnet2Prefix": {
-      "type": "string",
-      "defaultValue": "10.0.1.0/24",
-      "metadata": {
-        "description": "Subnet 2 Prefix"
-      }
-    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -103,23 +76,14 @@
     }
   },
   "variables": {
-    //"vmname": "[toLower(concat(parameters('project'),copyIndex(),'-vm','-wr'))]",
     "vnetname": "[toLower(concat(parameters('project'),'-vnet-',parameters('environment'),'-wr'))]",
     "availabilitySetName": "[toLower(concat(parameters('project'),'-avl-',parameters('environment'),'-wr'))]",
-    // "subnet1Name": "[toLower(concat(parameters('project'),'01-subnet-',parameters('environment'),'-wr'))]",
-    // "subnetName": "[toLower(concat(parameters('project'),copyIndex(),'-subnet-',parameters('environment'),'-wr'))]",
-    // "subnet2Name": "[toLower(concat(parameters('project'),'02-subnet-',parameters('environment'),'-wr'))]",
-    // "vmnic": "[toLower(concat(parameters('project'),'-nic',copyIndex(),'-',parameters('environment'),'-wr'))]",
     "nsgid01": "[resourceId('Microsoft.Network/networkSecurityGroups', 'Devlabs01-nsg')]",
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetname'))]",
-    "snetRef-01": "[concat(variables('vnetId'), '/subnets/', 'subnet1')]",
-
-    //"subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetname')), toLower(concat(parameters('project'),copyIndex(),'-subnet-',parameters('environment'),'-wr')))]",
-    "publicIPAddressName": "[toLower(concat(parameters('project'),'-pip1-',parameters('environment'),'-wr'))]",
-    "subnetName": "subnet0",
-    "subnetModName": "[substring(variables('subnetName'),0,sub(length(variables('subnetName')), 1))]",
+    "publicIPAddressName": "[toLower(concat(parameters('project'),'-pip-'))]",
+    "subnetName": "subnet",
     "SeperatedValues": "[split(parameters('vnetAddressPrefix'),'.')]",
-    "subnets": "[parameters('subnetsarray')]"
+    "lbName": "[toLower(concat(parameters('project'),'-elb-',parameters('environment'),'-wr'))]"
   },
   "resources": [
     {
@@ -143,7 +107,7 @@
     {
       "apiVersion": "2017-08-01",
       "type": "Microsoft.Network/virtualNetworks/subnets",
-      "name": "[concat(variables('vnetname'),'/',variables('subnetModName'),copyindex(1))]",
+      "name": "[concat(variables('vnetname'),'/',variables('subnetName'),copyindex(1))]",
       "location": "[resourceGroup().location]",
       "properties": {
         "addressPrefix": "[concat(variables('SeperatedValues')[0],'.',variables('SeperatedValues')[1],'.', copyIndex(1),'.0/24')]"
@@ -184,11 +148,10 @@
       }
     },
     {
-      "name": "[toLower(concat(parameters('project'),'-nic',copyIndex(),'-',parameters('environment'),'-wr'))]",
+      "name": "[toLower(concat(parameters('project'),'-nic',copyIndex(1),'-',parameters('environment'),'-wr'))]",
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2017-10-01",
       "dependsOn": [
-        //"[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
         "subnetCount",
         "[variables('vnetName')]"
       ],
@@ -204,9 +167,7 @@
             "name": "ipconfig1",
             "properties": {
               "subnet": {
-                "id":"[concat(variables('vnetId'), '/subnets/', variables('subnetModName'),copyindex(1))]",
-               //"id": "[variables('snetRef-01')]"
-               
+                "id": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'),copyindex(1))]",
               },
               "privateIPAllocationMethod": "Dynamic",
             }
@@ -218,7 +179,7 @@
       }
     },
     {
-      "name": "[toLower(concat(parameters('project'),copyIndex(),'-vm','-wr'))]",
+      "name": "[toLower(concat(parameters('project'),copyIndex(1),'-vm','-wr'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
@@ -233,7 +194,7 @@
       ],
       "properties": {
         "osProfile": {
-          "computerName": "[toLower(concat(parameters('project'),copyIndex(),'-vm','-wr'))]",
+          "computerName": "[toLower(concat(parameters('project'),copyIndex(2),'-vm','-wr'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]",
           "windowsConfiguration": {
@@ -251,13 +212,12 @@
             "version": "latest"
           },
           "osDisk": {
-            "createOption": "fromImage",
-            "name": "[toLower(concat(parameters('project'),'-disk', copyIndex(),'-md-',parameters('environment'),'-wr'))]",
+            "createOption": "FromImage",
+            "name": "[toLower(concat(parameters('project'),'-disk', copyIndex(1),'-md-',parameters('environment'),'-wr'))]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             }
           },
-          
           "dataDisks": []
         },
         "availabilitySet": {
@@ -266,20 +226,23 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces/',toLower(concat(parameters('project'),'-nic',copyIndex(),'-',parameters('environment'),'-wr')))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/',toLower(concat(parameters('project'),'-nic',copyIndex(1),'-',parameters('environment'),'-wr')))]"
             }
           ]
         }
       },
       "resources": []
     },
-    
     {
       "apiVersion": "2017-10-01",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('publicIPAddressName')]",
+      "name": "[concat(variables('publicIPAddressName'),copyindex(1),parameters('environment'),'-wr')]",
       "tags": "[parameters('tags')]",
       "location": "[parameters('location')]",
+      "copy": {
+        "name": "piploop",
+        "count": 2
+      },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
       }
@@ -287,7 +250,6 @@
     {
       "name": "[variables('availabilitySetName')]",
       "type": "Microsoft.Compute/availabilitySets",
-      "tags": "[parameters('tags')]",
       "apiVersion": "2017-12-01",
       "location": "[parameters('location')]",
       "tags": "[parameters('tags')]",
@@ -297,6 +259,31 @@
       },
       "sku": {
         "name": "Aligned"
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "name": "[variables('lbName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "piploop"
+      ],
+      "copy": {
+        "name": "elbloop",
+        "count": 1
+      },
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LoadBalancerFrontEnd",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[concat(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')),copyindex(1),parameters('environment'),'-wr')]",
+              }
+            }
+          }
+        ]
       }
     }
   ]
