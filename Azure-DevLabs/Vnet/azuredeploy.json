@@ -2,13 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "newLabName": {
-      "type": "string",
-      "defaultValue": "FabrikamDemoLab",
-      "metadata": {
-        "description": "The name of the new lab instance to be created."
-      }
-    },
     "project": {
       "type": "string",
       "defaultValue": "dlbs",
@@ -39,7 +32,7 @@
     },
     "virtualMachineSize": {
       "type": "string",
-      "defaultValue":"Standard_DS1_v2",
+      "defaultValue": "Standard_DS1_v2",
       "metadata": {
         "description": "Size of the VM"
       }
@@ -108,6 +101,7 @@
             "[parameters('vnetAddressPrefix')]"
           ]
         },
+        "subnets": []
       }
     },
     {
@@ -224,6 +218,7 @@
               "storageAccountType": "Standard_LRS"
             }
           },
+          "dataDisks": []
         },
         "availabilitySet": {
           "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
@@ -236,6 +231,7 @@
           ]
         }
       },
+      "resources": []
     },
     {
       "apiVersion": "2017-10-01",
