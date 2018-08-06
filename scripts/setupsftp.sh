@@ -16,8 +16,10 @@ cat "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
 
 systemctl restart ssh #-- restart to pick up config changes from sshd_config update
 
-useradd -m dev-testuser -s /usr/sbin/nologin -G ftpaccess #-- add users
-passwd $1
+#--(echo $1; echo $1; echo 1; echo 2; echo 3; echo 4; echo 5; echo Y) | adduser dev-testuser -s /usr/sbin/nologin -G ftpaccess #-- add users
+adduser dev-testuser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+echo "dev-testuser:$1" | sudo chpasswd
+usermod -a -G ftpaccess dev-testuser
 chown root:root /home/dev-testuser
 mkdir /home/dev-testuser/upload
 chown dev-testuser:ftpaccess /home/dev-testuser/upload
