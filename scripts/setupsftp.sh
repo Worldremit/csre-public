@@ -1,5 +1,3 @@
-$1
-
 apt-get update   #-- check for updates
 apt-get install openssh-server #-- install SFTP
 cp /etc/vsftpd.conf /etc/vsftpd.conf.bk #-- backup config
@@ -7,85 +5,96 @@ addgroup ftpaccess #-- create group for SFTP users
 
 #/etc/ssh/sshd_config --> needs to be added to file following amends to bottom --> 
 
-cat "#Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
-cat "X11Forwarding no" >> /etc/ssh/sshd_config
-cat "Match group ftpaccess" >> /etc/ssh/sshd_config
-cat "ChrootDirectory %h" >> /etc/ssh/sshd_config
-cat "AllowTcpForwarding no" >> /etc/ssh/sshd_config
-cat "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
+echo "" >> /etc/ssh/sshd_config
+echo "#Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
+echo "X11Forwarding no" >> /etc/ssh/sshd_config
+echo "Match group ftpaccess" >> /etc/ssh/sshd_config
+echo "ChrootDirectory %h" >> /etc/ssh/sshd_config
+echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
+echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
 
 systemctl restart ssh #-- restart to pick up config changes from sshd_config update
 
-#--(echo $1; echo $1; echo 1; echo 2; echo 3; echo 4; echo 5; echo Y) | adduser dev-testuser -s /usr/sbin/nologin -G ftpaccess #-- add users
 adduser dev-testuser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
-echo "dev-testuser:$1" | sudo chpasswd
+(echo dev-testuser:$1) | chpasswd
 usermod -a -G ftpaccess dev-testuser
 chown root:root /home/dev-testuser
 mkdir /home/dev-testuser/upload
 chown dev-testuser:ftpaccess /home/dev-testuser/upload
 
-useradd -m dev-bhd -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser dev-bhd --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo dev-bhddev-bhd:$1) | chpasswd
+usermod -a -G ftpaccess dev-bhd
 chown root:root /home/dev-bhd
 mkdir /home/dev-bhd/upload
 chown dev-bhd:ftpaccess /home/dev-bhd/upload
 
-useradd -m dev-bolivariano -s /usr/sbin/nologin -G ftpaccess
-passwd $1
-chown root:root /home/dev-bolivariano
+adduser dev-bolivariano --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo dev-bolivariano:$1) | chpasswd
+usermod -a -G ftpaccess dev-bolivariano
+chown root:root /home/dev-bolivarianodev
 mkdir /home/dev-bolivariano/upload
 chown dev-bolivariano:ftpaccess /home/dev-bolivariano/upload
 
-useradd -m dev-davivienda -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser dev-davivienda --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo dev-davivienda:$1) | chpasswd
+usermod -a -G ftpaccess dev-davivienda
 chown root:root /home/dev-davivienda
 mkdir /home/dev-davivienda/upload
 chown dev-davivienda:ftpaccess /home/dev-davivienda/upload
 
-useradd -m int-testuser -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser int-testuser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo int-testuser:$1) | chpasswd
+usermod -a -G ftpaccess int-testuser
 chown root:root /home/int-testuser
 mkdir /home/int-testuser/upload
 chown int-testuser:ftpaccess /home/int-testuser/upload
 
-useradd -m int-bhd -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser int-bhd --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo int-bhd:$1) | chpasswd
+usermod -a -G ftpaccess int-bhd
 chown root:root /home/int-bhd
 mkdir /home/int-bhd/upload
 chown int-bhd:ftpaccess /home/int-bhd/upload
 
-useradd -m int-bolivariano -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser int-bolivariano --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo int-bolivariano:$1) | chpasswd
+usermod -a -G ftpaccess int-bolivariano
 chown root:root /home/int-bolivariano
 mkdir /home/int-bolivariano/upload
 chown int-bolivariano:ftpaccess /home/int-bolivariano/upload
 
-useradd -m int-davivienda -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser int-davivienda --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo int-davivienda:$1) | chpasswd
+usermod -a -G ftpaccess int-davivienda
 chown root:root /home/int-davivienda
 mkdir /home/int-davivienda/upload
 chown int-davivienda:ftpaccess /home/int-davivienda/upload
 
-useradd -m uat-testuser -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser uat-testuser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo uat-testuser:$1) | chpasswd
+usermod -a -G ftpaccess uat-testuser
 chown root:root /home/uat-testuser
 mkdir /home/uat-testuser/upload
 chown uat-testuser:ftpaccess /home/uat-testuser/upload
 
-useradd -m uat-bhd -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser uat-bhd --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo uat-bhd:$1) | chpasswd
+usermod -a -G ftpaccess uat-bhd
 chown root:root /home/uat-bhd
 mkdir /home/uat-bhd/upload
 chown uat-bhd:ftpaccess /home/uat-bhd/upload
 
-useradd -m uat-bolivariano -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser uat-bolivariano --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo uat-bolivariano:$1) | chpasswd
+usermod -a -G ftpaccess uat-bolivariano
 chown root:root /home/uat-bolivariano
 mkdir /home/uat-bolivariano/upload
 chown uat-bolivariano:ftpaccess /home/uat-bolivariano/upload
 
-useradd -m uat-davivienda -s /usr/sbin/nologin -G ftpaccess
-passwd $1
+adduser uat-davivienda --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+(echo uat-davivienda:$1) | chpasswd
+usermod -a -G ftpaccess uat-davivienda
 chown root:root /home/uat-davivienda
 mkdir /home/uat-davivienda/upload
 chown uat-davivienda:ftpaccess /home/uat-davivienda/upload
