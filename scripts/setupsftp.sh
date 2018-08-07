@@ -1,4 +1,4 @@
-Echo $0 > /tmp/out.txt
+echo $0 > /tmp/out.txt
 
 apt-get update   #-- check for updates
 apt-get install openssh-server #-- install SFTP
