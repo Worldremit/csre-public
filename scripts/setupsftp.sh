@@ -11,7 +11,7 @@ echo "" >> /etc/ssh/sshd_config
 echo "" >> /etc/ssh/sshd_config
 echo "#Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
 echo "X11Forwarding no" >> /etc/ssh/sshd_config
-echo "Match group ftpaccess" >> /etc/ssh/sshd_configcd
+echo "Match group ftpaccess" >> /etc/ssh/sshd_config
 echo "ChrootDirectory %h" >> /etc/ssh/sshd_config
 echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config
 echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config
