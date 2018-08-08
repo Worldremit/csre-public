@@ -1,5 +1,3 @@
-echo $1 > /tmp/out.txt
-
 apt-get update   #-- check for updates
 apt-get install openssh-server #-- install SFTP
 cp /etc/vsftpd.conf /etc/vsftpd.conf.bk #-- backup config
