@@ -33,7 +33,7 @@ chown dev-bhd:ftpaccess /home/dev-bhd/upload
 adduser dev-bolivariano --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo dev-bolivariano:$1) | chpasswd
 usermod -a -G ftpaccess dev-bolivariano
-chown root:root /home/dev-bolivarianodev
+chown root:root /home/dev-bolivariano
 mkdir /home/dev-bolivariano/upload
 chown dev-bolivariano:ftpaccess /home/dev-bolivariano/upload
 
