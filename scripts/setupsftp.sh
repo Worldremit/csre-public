@@ -24,7 +24,7 @@ mkdir /home/dev-testuser/upload
 chown -R dev-testuser:ftpaccess /home/dev-testuser
 
 adduser dev-bhd --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
-(echo dev-bhddev-bhd:$1) | chpasswd
+(echo dev-bhd:$1) | chpasswd
 usermod -a -G ftpaccess dev-bhd
 chown root:root /home/dev-bhd
 mkdir /home/dev-bhd/upload
@@ -34,7 +34,7 @@ adduser dev-bolivariano --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --di
 (echo dev-bolivariano:$1) | chpasswd
 usermod -a -G ftpaccess dev-bolivariano
 chown root:root /home/dev-bolivariano
-mkdir /home/dev-bolivariano/uploadcat 
+mkdir /home/dev-bolivariano/upload 
 chown -R dev-bolivariano:ftpaccess /home/dev-bolivariano
 
 adduser dev-davivienda --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
