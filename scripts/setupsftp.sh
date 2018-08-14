@@ -20,94 +20,82 @@ adduser dev-testuser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disab
 (echo dev-testuser:$1) | chpasswd
 usermod -a -G ftpaccess dev-testuser
 chown root:root /home/dev-testuser
-chmod u=rwx,g=rx,o=rx /home/dev-testuser
 mkdir /home/dev-testuser/upload
-chown -R dev-testuser:ftpaccess /home/dev-testuser/upload
+chown -R dev-testuser:ftpaccess /home/dev-testuser
 
 adduser dev-bhd --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
-(echo dev-bhd:$1) | chpasswd
+(echo dev-bhddev-bhd:$1) | chpasswd
 usermod -a -G ftpaccess dev-bhd
 chown root:root /home/dev-bhd
-chmod u=rwx,g=rx,o=rx /home/dev-bhd
 mkdir /home/dev-bhd/upload
-chown -R dev-bhd:ftpaccess /home/dev-bhd/upload
+chown -R dev-bhd:ftpaccess /home/dev-bhd
 
 adduser dev-bolivariano --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo dev-bolivariano:$1) | chpasswd
 usermod -a -G ftpaccess dev-bolivariano
 chown root:root /home/dev-bolivariano
-chmod u=rwx,g=rx,o=rx /home/dev-bolivariano
-mkdir /home/dev-bolivariano/upload 
-chown -R dev-bolivariano:ftpaccess /home/dev-bolivariano/upload
+mkdir /home/dev-bolivariano/uploadcat 
+chown -R dev-bolivariano:ftpaccess /home/dev-bolivariano
 
 adduser dev-davivienda --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo dev-davivienda:$1) | chpasswd
 usermod -a -G ftpaccess dev-davivienda
 chown root:root /home/dev-davivienda
-chmod u=rwx,g=rx,o=rx /home/dev-davivienda
 mkdir /home/dev-davivienda/upload
-chown -R dev-davivienda:ftpaccess /home/dev-davivienda/upload
+chown -R dev-davivienda:ftpaccess /home/dev-davivienda
 
 adduser int-testuser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo int-testuser:$1) | chpasswd
 usermod -a -G ftpaccess int-testuser
 chown root:root /home/int-testuser
-chmod u=rwx,g=rx,o=rx /home/int-testuser
 mkdir /home/int-testuser/upload
-chown -R int-testuser:ftpaccess /home/int-testuser/upload
+chown -R int-testuser:ftpaccess /home/int-testuser
 
 adduser int-bhd --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo int-bhd:$1) | chpasswd
 usermod -a -G ftpaccess int-bhd
 chown root:root /home/int-bhd
-chmod u=rwx,g=rx,o=rx /home/int-bhd
 mkdir /home/int-bhd/upload
-chown -R int-bhd:ftpaccess /home/int-bhd/upload
+chown -R int-bhd:ftpaccess /home/int-bhd
 
 adduser int-bolivariano --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo int-bolivariano:$1) | chpasswd
 usermod -a -G ftpaccess int-bolivariano
 chown root:root /home/int-bolivariano
-chmod u=rwx,g=rx,o=rx /home/int-bolivariano
 mkdir /home/int-bolivariano/upload
-chown -R int-bolivariano:ftpaccess /home/int-bolivariano/upload
+chown -R int-bolivariano:ftpaccess /home/int-bolivariano
 
 adduser int-davivienda --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo int-davivienda:$1) | chpasswd
 usermod -a -G ftpaccess int-davivienda
 chown root:root /home/int-davivienda
-chmod u=rwx,g=rx,o=rx /home/int-davivienda
 mkdir /home/int-davivienda/upload
-chown -R int-davivienda:ftpaccess /home/int-davivienda/upload
+chown -R int-davivienda:ftpaccess /home/int-davivienda
 
 adduser uat-testuser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo uat-testuser:$1) | chpasswd
 usermod -a -G ftpaccess uat-testuser
 chown root:root /home/uat-testuser
-chmod u=rwx,g=rx,o=rx /home/uat-testuser
 mkdir /home/uat-testuser/upload
-chown -R uat-testuser:ftpaccess /home/uat-testuser/upload
+chown -R uat-testuser:ftpaccess /home/uat-testuser
 
 adduser uat-bhd --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo uat-bhd:$1) | chpasswd
 usermod -a -G ftpaccess uat-bhd
 chown root:root /home/uat-bhd
-chmod u=rwx,g=rx,o=rx /home/uat-bhd
 mkdir /home/uat-bhd/upload
-chown -R uat-bhd:ftpaccess /home/uat-bhd/upload
+chown -R uat-bhd:ftpaccess /home/uat-bhd
 
 adduser uat-bolivariano --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo uat-bolivariano:$1) | chpasswd
 usermod -a -G ftpaccess uat-bolivariano
 chown root:root /home/uat-bolivariano
-chmod u=rwx,g=rx,o=rx /home/uat-bolivariano
 mkdir /home/uat-bolivariano/upload
-chown -R uat-bolivariano:ftpaccess /home/uat-bolivariano/upload
+chown -R uat-bolivariano:ftpaccess /home/uat-bolivariano
 
 adduser uat-davivienda --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 (echo uat-davivienda:$1) | chpasswd
 usermod -a -G ftpaccess uat-davivienda
 chown root:root /home/uat-davivienda
-chmod u=rwx,g=rx,o=rx /home/uat-davivienda
 mkdir /home/uat-davivienda/upload
-chown -R uat-davivienda:ftpaccess /home/uat-davivienda/upload
+chown -R uat-davivienda:ftpaccess /home/uat-davivienda
