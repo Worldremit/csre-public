@@ -26,8 +26,6 @@ check_exit cd /opt/buildAgent/bin/
 
 check_exit ls -ltrh
 
-check_exit bash install.sh https://teamcity.csre.worldremit.com/
+check_exit ./install.sh https://teamcity.csre.worldremit.com/ &
 
-check_exit sleep 10
-
-check_exit bash agent.sh start &
+#check_exit ./agent.sh start &
