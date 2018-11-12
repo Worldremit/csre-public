@@ -1,17 +1,30 @@
 #!/usr/bin/env bash
 
-touch /opt/test
+function check_exit {
+    "$@"
+    local status=$?
+    if [ $status -ne 0 ]; then
+        echo "error with $1" >&2
+    fi
+    return $status
+}
 
-echo "it works" > /opt/test
+sudo apt install unzip
 
-cd /opt/
+check_exit cd /opt/
 
-wget https://teamcity.csre.worldremit.com/update/buildAgent.zip
+check_exit wget https://teamcity.csre.worldremit.com/update/buildAgent.zip
 
-unzip /opt/buildAgent.zip
+check_exit unzip /opt/buildAgent.zip
 
-ls -ltrh
+check_exit ls -ltrh
 
-cd /opt/buildAgent/
+check_exit cd /opt/buildAgent/bin/
 
-bash install.sh
+check_exit ls -ltrh
+
+check_exit bash install.sh
+
+check_exit sleep 10
+
+check_exit bash agent.sh &
