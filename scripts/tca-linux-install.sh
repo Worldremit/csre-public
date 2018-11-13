@@ -20,12 +20,8 @@ check_exit wget https://teamcity.csre.worldremit.com/update/buildAgent.zip
 
 check_exit unzip /opt/buildAgent.zip
 
-check_exit ls -ltrh
+check_exit cd /opt/bin/
 
-check_exit cd /opt/buildAgent/bin/
-
-check_exit ls -ltrh
-
-check_exit ./install.sh https://teamcity.csre.worldremit.com/ &
+check_exit bash install.sh https://teamcity.csre.worldremit.com/ &
 
 #check_exit ./agent.sh start &
