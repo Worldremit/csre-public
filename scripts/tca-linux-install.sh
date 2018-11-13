@@ -23,5 +23,3 @@ check_exit unzip /opt/buildAgent.zip
 check_exit cd /opt/bin/
 
 check_exit bash install.sh https://teamcity.csre.worldremit.com/ &
-
-#check_exit ./agent.sh start &
