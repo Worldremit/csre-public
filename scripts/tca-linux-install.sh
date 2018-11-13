@@ -23,3 +23,11 @@ check_exit unzip /opt/buildAgent.zip
 check_exit cd /opt/bin/
 
 check_exit bash install.sh https://teamcity.csre.worldremit.com/ &
+
+check_exit wget https://releases.hashicorp.com/packer/1.3.2/packer_1.3.2_linux_amd64.zip 
+
+check_exit unzip /opt/packer_1.3.2_linux_amd64.zip
+
+check_exit sudo mv packer /usr/bin/packer
+
+check_exit sudo chmod +x /usr/bin/packer
