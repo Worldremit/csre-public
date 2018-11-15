@@ -39,6 +39,13 @@ check_exit sudo apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv --key
 check_exit sudo apt update
 check_exit sudo apt install -y azure-cli
 
+echo -e "\n### Microsoft .NET Core Installation\n"
+check_exit cd /tmp
+check_exit sudo wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+check_exit sudo dpkg -i packages-microsoft-prod.deb
+check_exit sudo apt update
+check_exit sudo apt install -y nuget
+
 echo -e "\n### Installation of TC Build Agent\n"
 check_exit cd /opt/
 check_exit sudo wget https://teamcity.csre.worldremit.com/update/buildAgent.zip
