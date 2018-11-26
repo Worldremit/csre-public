@@ -15,8 +15,12 @@ check_exit sudo apt update -y
 check_exit sudo apt upgrade -y
 check_exit sudo apt install unzip -y
 check_exit sudo apt install openjdk-8-jre -y
-check_exit sudo apt install -y apt-transport-https ca-certificates curl software-properties-common lsb-release
+check_exit sudo apt install -y apt-transport-https ca-certificates curl software-properties-common lsb-release yamllint
 check_exit sudo apt autoremove -y
+
+echo -e "\n### Python and dependencies installation\n"
+check_exit sudo apt install -y python-pip
+check_exit sudo pip install pipenv
 
 echo -e "\n### Packer installation\n"
 check_exit cd /tmp
